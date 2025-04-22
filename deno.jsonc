@@ -1,0 +1,15 @@
+{
+    "name": "@louislam/deno-serve-router",
+    "version": "1.0.0",
+    "license": "MIT",
+    "exports": "./router.ts",
+    "tasks": {
+        "test": "deno test --allow-net"
+    },
+    "fmt": {
+        "indentWidth": 4,
+        "semiColons": true,
+        "singleQuote": false,
+        "lineWidth": 200
+    }
+}

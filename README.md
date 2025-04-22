@@ -1,6 +1,6 @@
-# bun-serve-router
+# deno-serve-router
 
-A very simple router implementation for `bun.serve()` using [URL Pattern API](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern). 
+A very simple router implementation for `Deno.serve()` using [URL Pattern API](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).
 
 No fancy, just works.
 
@@ -11,59 +11,65 @@ No fancy, just works.
 
 ## How to Use
 
-Install the dependency:
+1. Add the dependency to your deno project:
 
-```bash
-bun add bun-serve-router
-```
+    ```bash
+    deno add jsr:@louislam/deno-serve-router
+    ```
 
-Import and add your routes:
+    ```typescript
+    import { Router } from "@louislam/deno-serve-router";
+    ```
+
+    or just import it directly:
+
+    ```typescript
+    import { Router } from "jsr:@louislam/deno-serve-router";
+    ```
+
+1. Import and add your routes:
+
+    ```typescript
+    const router = new Router();
+    router.add("GET", "/", (request, params) => {
+        return new Response("Hello World!");
+    });
+    ```
+
+1. And then, inside the handler of `Deno.serve(...)`, you can match your routes like this:
+
+    ```typescript
+    const response = await router.match(request);
+    ```
+
+1. Since it is possible that no route matches, you should check if `response` is not `undefined` before returning it:
+
+    ```typescript
+    if (response) {
+        return response;
+    }
+    ```
+
+## Simple Full Example
 
 ```typescript
-import {Router} from "bun-serve-router";
-const router = new Router();
-router.add("GET", "/", (request, params) => {
-    return new Response("Hello World!");
-})
-```
-
-In the `fetch` handler of `Bun.server()`, you can match your routes like this:
-
-```typescript
-const response = await router.match(request);
-```
-
-Since it is possible that no route matches, you should check if `response` is not `undefined` before returning it:
-
-```typescript
-if (response) {
-    return response;
-}
-```
-
-## Full Examples
-
-```typescript
-import {Router} from "bun-serve-router";
+import { Router } from "jsr:@louislam/deno-serve-router";
 
 const router = new Router();
 
 // Add your routes
 router.add("GET", "/", (request, params) => {
     return new Response("Hello World!");
-})
+});
 
-Bun.serve({
-    async fetch(request) {
-        // Match here
-        const response = await router.match(request);
-        if (response) {
-            return response;
-        }
-
-        // Return 404 if no route matches
-        return new Response("404 Not Found", { status: 404 });
-    },
+Deno.serve(async (request) => {
+    // Match here
+    const response = await router.match(request);
+    if (response) {
+        return response;
+    }
+    // Return 404 if no route matches
+    return new Response("404 Not Found", { status: 404 });
 });
 ```
 
@@ -74,7 +80,7 @@ Bun.serve({
 ```typescript
 router.add("GET", "/hello/:myName", (request, params) => {
     return new Response("Hello " + params.myName);
-})
+});
 ```
 
 ### URLPatternResult
@@ -86,10 +92,5 @@ Check the [URL Pattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL
 ```typescript
 router.add("GET", "/hello/:myName", (request, params, urlPatternResult) => {
     return new Response("Hello " + params.myName);
-})
+});
 ```
-
-### Others
-
-It is actually a very standalone router. It is actually not limited to `bun.serve()`. As long as your application is using the Fetch API, it should be working too. 
-
