@@ -161,6 +161,23 @@ describe("Test router", () => {
     });
 });
 
+Deno.test("Test params if decoded", async () => {
+    const request = new Request("https://example.com/aaaaaa/%20bbbbb%20", {
+        method: "GET",
+    });
+
+    const router = new Router();
+    router.add("GET", "/aaaaaa/:ddddd", (_request, params) => {
+        return new Response(params.ddddd);
+    });
+    const response = await router.match(request);
+    expect(response).toBeInstanceOf(Response);
+    if (response) {
+        expect(response.status).toBe(200);
+        expect(await response.text()).toBe(" bbbbb ");
+    }
+});
+
 Deno.test({
     name: "Test with Deno.serve (Example)",
     fn: async () => {

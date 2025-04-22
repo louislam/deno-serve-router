@@ -1,6 +1,6 @@
 {
     "name": "@louislam/deno-serve-router",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "exports": "./router.ts",
     "tasks": {

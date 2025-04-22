@@ -18,7 +18,14 @@ export class Router {
             if (request.method === route.method) {
                 const result = route.urlPattern.exec(request.url);
                 if (result) {
-                    const r = route.handler(request, result.pathname.groups, result);
+                    const params = result.pathname.groups;
+                    for (const key in params) {
+                        if (params[key]) {
+                            params[key] = decodeURIComponent(params[key]);
+                        }
+                    }
+
+                    const r = route.handler(request, params, result);
 
                     if (r instanceof Response) {
                         return r;
