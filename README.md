@@ -27,7 +27,7 @@ No fancy, just works.
     import { Router } from "jsr:@louislam/deno-serve-router";
     ```
 
-1. Import and add your routes:
+1. Create `Router` object and add your routes:
 
     ```typescript
     const router = new Router();
@@ -36,7 +36,7 @@ No fancy, just works.
     });
     ```
 
-1. And then, inside the handler of `Deno.serve(...)`, you can match your routes like this:
+1. Inside the handler of `Deno.serve(...)`, you can match your routes like this:
 
     ```typescript
     const response = await router.match(request);
@@ -73,13 +73,23 @@ Deno.serve(async (request) => {
 });
 ```
 
-## Advanced Usage
+## More Usages
 
 ### Params
 
 ```typescript
 router.add("GET", "/hello/:myName", (request, params) => {
     return new Response("Hello " + params.myName);
+});
+```
+
+### JSON Response
+
+```typescript
+router.add("GET", "/hello", () => {
+    return Response.json({
+        "foo": "bar"
+    });
 });
 ```
 
